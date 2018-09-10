@@ -16,7 +16,6 @@
     <link rel="icon" type="image/png" sizes="16x16" href="%PUBLIC_URL%/favicon-16x16.png">
     <link rel="mask-icon" href="%PUBLIC_URL%/safari-pinned-tab.svg" color="#5bbad5">
     <meta name="msapplication-TileColor" content="#2b5797">
-
     <!--
       Notice the use of %PUBLIC_URL% in the tags above.
       It will be replaced with the URL of the `public` folder during the build.
@@ -56,6 +55,30 @@
       To begin the development, run `npm start` or `yarn start`.
       To create a production bundle, use `npm run build` or `yarn build`.
     -->
+
+    <!--
+      The critical styles needed to style the above-the-fold content are 
+      inlined and applied to the document immediately. The full small.css 
+      is loaded after initial painting of the page. Its styles are applied 
+      to the page once it finishes loading, without blocking the initial render 
+      of the critical content.
+    -->
+    <noscript id="deferred-styles">
+      <link rel="stylesheet" href="%PUBLIC_URL%/tachyons.min.css"/>
+    </noscript>
+    <script>
+      var loadDeferredStyles = function() {
+        var addStylesNode = document.getElementById("deferred-styles");
+        var replacement = document.createElement("div");
+        replacement.innerHTML = addStylesNode.textContent;
+        document.body.appendChild(replacement)
+        addStylesNode.parentElement.removeChild(addStylesNode);
+      };
+      var raf = window.requestAnimationFrame || window.mozRequestAnimationFrame ||
+          window.webkitRequestAnimationFrame || window.msRequestAnimationFrame;
+      if (raf) raf(function() { window.setTimeout(loadDeferredStyles, 0); });
+      else window.addEventListener('load', loadDeferredStyles);
+    </script>
     <script src="%PUBLIC_URL%/lazysizes.min.js" async=""></script>
   </body>
 </html>
